@@ -12,7 +12,7 @@ function getUsers() {
                 <tr>
                 <td id="id${user.id}">${user.id}</td>
                 <td id="name${user.id}">${user.name}</td> 
-                <td id="surname${user.id}">${user.surName}</td>
+                <td id="surname${user.id}">${user.surname}</td>
                 <td id="age${user.id}">${user.age}</td>
                 <td id="email${user.id}">${user.email}</td>
                 <td id="roles${user.id}">${user.roles.map(r => r.role.replace('ROLE_','')).join(', ')}</td>
@@ -43,14 +43,14 @@ function fillModal(id) {
         res.json().then(user => {
             document.getElementById('id').value = user.id;
             document.getElementById('editName').value = user.name;
-            document.getElementById('editSurName').value = user.surName;
+            document.getElementById('editSurname').value = user.surname;
             document.getElementById('editAge').value = user.age;
             document.getElementById('editEmail').value = user.email;
             document.getElementById('editPassw').value = user.passw;
 
             document.getElementById('delId').value = user.id;
             document.getElementById('delName').value = user.name;
-            document.getElementById('delSurName').value = user.surName;
+            document.getElementById('delSurname').value = user.surname;
             document.getElementById('delAge').value = user.age;
             document.getElementById('delEmail').value = user.email;
             document.getElementById('delPassw').value = user.passw;
@@ -71,7 +71,7 @@ function showUser() {
             temp += `
                 <td>${user.id}</td>
                 <td>${user.name}</td>
-                <td>${user.surName}</td>
+                <td>${user.surname}</td>
                 <td>${user.age}</td>
                 <td>${user.email}</td>
                 <td>${user.roles.map(r => r.role.replace('ROLE_','')).join(', ')}</td>
@@ -98,7 +98,7 @@ function newUserForm(e){
     let roles = selectRole(Array.from(document.getElementById("addRole").selectedOptions)
         .map(r => r.value));
 
-        fetch("http://localhost:8080/rest/adduser", {
+        fetch("http://localhost:8080/rest/newuser", {
         method: "POST",
         headers: {
             'Accept': 'application/json',

@@ -20,7 +20,7 @@ public class UserModel implements UserDetails {
     @Column(name = "name")
     private String name;
     @Column(name = "surname")
-    private String surName;
+    private String surname;
     @Column(name = "age")
     private Integer age;
     @Column(name = "email", unique = true)
@@ -33,10 +33,10 @@ public class UserModel implements UserDetails {
 
     public UserModel(){}
 
-    public UserModel(String passw, String name, String surName, Integer age, String email, Set<Roles> roles) {
+    public UserModel(String passw, String name, String surname, Integer age, String email, Set<Roles> roles) {
         this.passw = passw;
         this.name = name;
-        this.surName = surName;
+        this.surname = surname;
         this.age = age;
         this.email = email;
         this.roles = roles;
@@ -67,12 +67,12 @@ public class UserModel implements UserDetails {
         this.name = name;
     }
 
-    public String getSurName() {
-        return surName;
+    public String getSurname() {
+        return surname;
     }
 
-    public void setSurName(String surName) {
-        this.surName = surName;
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
     public Integer getAge() {
