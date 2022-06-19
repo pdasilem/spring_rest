@@ -12,26 +12,23 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import ru.pdasilem.spring_rest.config.handler.LoginSuccessHandler;
 
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailsService userDetailsService;
-    private final LoginSuccessHandler loginSuccessHandler;
+    private final UserDetailsService userDetailsService; // сервис, с помощью которого тащим пользователя
+    private final LoginSuccessHandler loginSuccessHandler; // класс, в котором описана логика перенаправления пользователей по ролям
 
-    @Autowired
-    public SecurityConfig(@Qualifier("userDetailServiceImp") UserDetailsService userDetailsService
-            , LoginSuccessHandler loginSuccessHandler){
+    public SecurityConfig(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService, LoginSuccessHandler loginSuccessHandler) {
         this.userDetailsService = userDetailsService;
         this.loginSuccessHandler = loginSuccessHandler;
     }
 
     @Autowired
     public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder()); // конфигурация для прохождения аутентификации
     }
 
     @Override
@@ -44,8 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // указываем action с формы логина
                 .loginProcessingUrl("/login")
                 // Указываем параметры логина и пароля с формы логина
-                .usernameParameter("email")
-                .passwordParameter("passw")
+                .usernameParameter("j_username")
+                .passwordParameter("j_password")
                 // даем доступ к форме логина всем
                 .permitAll();
 
@@ -65,22 +62,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //страницы аутентификаци доступна всем
                 .antMatchers("/login").anonymous()
                 // защищенные URL
-                .antMatchers("/user/**").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
-                .antMatchers("/**").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/favicon.ico").permitAll()
+                .antMatchers("/admin/**").hasAuthority("ADMIN")
+                .antMatchers("/user").hasAnyAuthority("USER", "ADMIN")
                 .anyRequest().authenticated();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(12);
     }
-
-//    @Bean
-//    public FilterRegistrationBean hiddenHttpMethodFilter() {
-//        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(new HiddenHttpMethodFilter());
-//        filterRegistrationBean.setUrlPatterns(Arrays.asList("/*"));
-//        return filterRegistrationBean;
-//    }
-
 }
